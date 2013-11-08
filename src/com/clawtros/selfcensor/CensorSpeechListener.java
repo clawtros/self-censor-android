@@ -31,6 +31,7 @@ public class CensorSpeechListener implements RecognitionListener {
 	public void onEndOfSpeech() {
 		Log.d("listener", "on end of speech");
 		this.activity.getButton().setText("End");
+		this.activity.startListening();
 	}
 
 	@Override
@@ -40,8 +41,9 @@ public class CensorSpeechListener implements RecognitionListener {
 		StringBuffer buffer = new StringBuffer(textView.getText());
 		buffer.append(String.format("error: %d ", errorCode));
 		this.activity.getTextView().setText(buffer.toString());
-		if (errorCode == 7) {
-			this.activity.restartListening();
+		
+		if (errorCode == SpeechRecognizer.ERROR_AUDIO || errorCode == SpeechRecognizer.ERROR_NO_MATCH) {
+			this.activity.startListening();
 		}
 	}
 
@@ -75,7 +77,7 @@ public class CensorSpeechListener implements RecognitionListener {
         }
         this.activity.getTextView().setText(buffer.toString());
         this.activity.getButton().setText("Results Received");
-        this.activity.restartListening();
+        this.activity.startListening();
 	}
 
 	@Override
